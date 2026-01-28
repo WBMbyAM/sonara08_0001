@@ -1,14 +1,19 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MindAR AR</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindAR AR Template</title>
+
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <!-- MindAR -->
+
+  <!-- MindAR JS -->
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
   <style>
-    body { margin:0; overflow:hidden; }
+    body { margin: 0; overflow: hidden; }
     #startButton {
       position: absolute;
       top: 50%;
@@ -27,53 +32,65 @@
 </head>
 <body>
 
-<button id="startButton" style="display:none;">Start AR</button>
+<!-- Start button for mobile -->
+<button id="startButton" style="display:none;">Start SONARA</button>
 
-<a-scene 
-  id="ar-scene"
-  mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1;"
-  embedded
-  vr-mode-ui="enabled: false"
-  device-orientation-permission-ui="enabled: true"
-  style="display:none; width: 100vw; height: 100vh;">
-  
-  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+<!-- AR Scene -->
+<a-scene
+    id="ar-scene"
+    mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1;"
+    embedded
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: true"
+    style="display:none; width: 100vw; height: 100vh;">
 
-  <a-entity mindar-image-target="targetIndex: 0">
-    <a-plane color="blue" opacity="0.5" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
-  </a-entity>
+    <!-- Camera -->
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <!-- AR Content -->
+    <a-entity mindar-image-target="targetIndex: 0">
+        <!-- Example animated plane -->
+        <a-plane
+            color="orange"
+            opacity="0.8"
+            position="0 0 0"
+            width="1"
+            height="0.5"
+            rotation="0 0 0"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 5000;">
+        </a-plane>
+    </a-entity>
+
 </a-scene>
 
 <script>
 const startButton = document.getElementById("startButton");
 const arScene = document.getElementById("ar-scene");
 
+// Detect mobile devices
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 async function startAR() {
-  startButton.style.display = "none";
+    startButton.style.display = "none";
+    arScene.style.display = "block";
 
-  // show scene immediately
-  arScene.style.display = "block";
+    // Initialize MindAR
+    const mindarScene = document.querySelector("a-scene").systems["mindar-image"];
 
-  const mindarScene = document.querySelector("a-scene").systems["mindar-image"];
+    // Ensure video plays inline on iOS
+    mindarScene.video.setAttribute('playsinline', true);
 
-  // Fix for iOS inline video
-  mindarScene.video.setAttribute('playsinline', true);
-
-  await mindarScene.start();
-
-  console.log("MindAR started!");
+    await mindarScene.start();
+    console.log("MindAR started!");
 }
 
+// Mobile: show button, Desktop: auto start
 if (isMobile) {
-  // show button on mobile
-  startButton.style.display = "block";
-  startButton.addEventListener("click", startAR);
+    startButton.style.display = "block";
+    startButton.addEventListener("click", startAR);
 } else {
-  // desktop auto-start
-  arScene.style.display = "block";
-  window.addEventListener("load", startAR);
+    arScene.style.display = "block";
+    window.addEventListener("load", startAR);
 }
 </script>
 
