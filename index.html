@@ -1,17 +1,72 @@
-
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image.prod.js"></script>
+    <title>MindAR Example</title>
+    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <!-- MindAR -->
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <style>
+      body { margin: 0; overflow: hidden; }
+      #startButton {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px 40px;
+        font-size: 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        z-index: 10;
+      }
+    </style>
   </head>
+
   <body>
-    <a-scene mindar-image="imageTargetSrc: ./targets.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <!-- Start button -->
+    <button id="startButton">Start AR</button>
+
+    <!-- AR Scene -->
+    <a-scene 
+      id="ar-scene"
+      mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1;" 
+      embedded 
+      vr-mode-ui="enabled: false" 
+      device-orientation-permission-ui="enabled: false"
+      style="display:none;"> <!-- hide until start -->
+
+      <!-- Camera -->
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <!-- AR Object -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-plane color="blue" opaciy="0.5" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
+        <a-plane 
+          color="blue" 
+          opacity="0.5" 
+          position="0 0 0" 
+          height="0.552" 
+          width="1" 
+          rotation="0 0 0">
+        </a-plane>
       </a-entity>
     </a-scene>
+
+    <script>
+      const startButton = document.getElementById("startButton");
+      const arScene = document.getElementById("ar-scene");
+
+      startButton.addEventListener("click", async () => {
+        startButton.style.display = "none"; // hide button
+        arScene.style.display = "block"; // show AR scene
+
+        // initialize MindAR
+        const mindarScene = document.querySelector("a-scene").systems["mindar-image"];
+        await mindarScene.start();
+      });
+    </script>
   </body>
 </html>
