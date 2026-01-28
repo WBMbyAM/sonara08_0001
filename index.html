@@ -3,12 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MindAR AR Animation Test</title>
+  <title>MindAR iOS Test</title>
 
-  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-
-  <!-- MindAR -->
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
@@ -16,17 +13,17 @@
     body { margin:0; overflow:hidden; }
     #startButton {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top:50%;
+      left:50%;
       transform: translate(-50%, -50%);
-      padding: 20px 40px;
-      font-size: 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      z-index: 10;
+      padding:20px 40px;
+      font-size:20px;
+      background-color:#007bff;
+      color:white;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      z-index:10;
     }
   </style>
 </head>
@@ -38,41 +35,15 @@
     id="ar-scene"
     mindar-image="imageTargetSrc: ./kats.mind; maxTrack: 1;"
     embedded
-    vr-mode-ui="enabled: true"
+    vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: true"
     style="display:none; width:100vw; height:100vh;">
 
-    <a-camera position="0 0 0" look-controls="enabled: true"></a-camera>
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity mindar-image-target="targetIndex: 0">
-
-        <!-- Rotating Plane -->
-        <a-plane 
-            color="orange" 
-            opacity="0.8" 
-            position="0 0 0" 
-            width="1" 
-            height="0.5" 
-            rotation="0 0 0"
-            animation="property: rotation; to: 0 360 0; loop: true; dur: 4000">
-        </a-plane>
-
-        <!-- Bouncing Sphere -->
-        <a-sphere 
-            color="red"
-            position="0 0.25 0.5"
-            radius="0.2"
-            animation="property: position; to: 0 0.5 0.5; dir: alternate; loop: true; dur: 1000">
-        </a-sphere>
-
-        <!-- Scaling Box -->
-        <a-box
-            color="blue"
-            position="0.5 0 0"
-            scale="0.3 0.3 0.3"
-            animation="property: scale; to: 0.6 0.6 0.6; dir: alternate; loop: true; dur: 1500">
-        </a-box>
-
+        <a-box color="orange" position="0 0.25 0" scale="0.5 0.5 0.5"
+               animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"></a-box>
     </a-entity>
 
 </a-scene>
@@ -81,26 +52,23 @@
 const startButton = document.getElementById('startButton');
 const arScene = document.getElementById('ar-scene');
 
-const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-async function startAR() {
+startButton.addEventListener('click', async () => {
     startButton.style.display = "none";
     arScene.style.display = "block";
 
-    const mindarScene = document.querySelector("a-scene").systems["mindar-image"];
-    mindarScene.video.setAttribute('playsinline', true);
+    const sceneEl = document.querySelector('a-scene');
+    const mindarSystem = sceneEl.systems['mindar-image'];
 
-    await mindarScene.start();
-    console.log("MindAR started!");
-}
+    // Ensure video plays inline on iOS
+    mindarSystem.video.setAttribute('playsinline', true);
 
-if (isMobile) {
-    startButton.style.display = "block";
-    startButton.addEventListener("click", startAR);
-} else {
-    arScene.style.display = "block";
-    window.addEventListener("load", startAR);
-}
+    try {
+        await mindarSystem.start();
+        console.log("MindAR started!");
+    } catch (e) {
+        console.error("MindAR failed to start:", e);
+    }
+});
 </script>
 
 </body>
