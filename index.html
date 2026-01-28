@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web AR Template</title>
+  <title>Web AR Multiple Markers</title>
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
-  <!-- AR.js for image tracking -->
-  <script src="https://cdn.rawgit.com/AR-js-org/AR.js/3.3.2/aframe/build/aframe-ar-nft.js"></script>
+  <!-- AR.js for marker tracking -->
+  <script src="https://cdn.rawgit.com/AR-js-org/AR.js/3.3.2/aframe/build/aframe-ar.js"></script>
 
   <style>
     body { margin:0; overflow:hidden; }
@@ -31,29 +31,29 @@
 </head>
 <body>
 
+<!-- Start button for mobile -->
 <button id="startButton">Start AR</button>
 
 <a-scene
     id="ar-scene"
     embedded
     vr-mode-ui="enabled: false"
-    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+    arjs="sourceType: webcam; debugUIEnabled: false;"
     style="display:none; width:100vw; height:100vh;"
     renderer="logarithmicDepthBuffer: true;">
 
-    <!-- Camera -->
     <a-camera position="0 0 0"></a-camera>
 
-    <!-- Image target using NFT (replace 'marker' with your files) -->
-    <a-nft
-        type="nft"
+    <!-- Marker for your design board -->
+    <a-marker
+        type="pattern"
         url="./pattern-marker.patt"
         smooth="true"
         smoothCount="10"
         smoothTolerance="0.01"
         smoothThreshold="5">
 
-        <!-- AR Content on top of marker -->
+        <!-- AR Content 1: rotating box -->
         <a-box
             position="0 0.25 0"
             rotation="0 0 0"
@@ -61,7 +61,22 @@
             color="orange"
             animation="property: rotation; to: 0 360 0; loop: true; dur: 4000">
         </a-box>
-    </a-nft>
+
+        <!-- AR Content 2: plane -->
+        <a-plane
+            position="0 0 0"
+            rotation="-90 0 0"
+            width="1"
+            height="0.5"
+            color="blue"
+            opacity="0.6">
+        </a-plane>
+
+        <!-- AR Content 3: example 3D model (replace with your GLTF) -->
+        <!-- <a-gltf-model src="./model.gltf" scale="0.5 0.5 0.5" position="0 0 0"></a-gltf-model> -->
+
+    </a-marker>
+
 </a-scene>
 
 <script>
