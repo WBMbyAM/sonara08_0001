@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MindAR AR Template</title>
+  <title>MindAR AR Animation Test</title>
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -32,7 +32,6 @@
 </head>
 <body>
 
-<!-- Start button for mobile -->
 <button id="startButton">Start AR</button>
 
 <a-scene
@@ -43,21 +42,37 @@
     device-orientation-permission-ui="enabled: true"
     style="display:none; width:100vw; height:100vh;">
 
-    <!-- Camera -->
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <!-- AR content on top of your target -->
     <a-entity mindar-image-target="targetIndex: 0">
-        <!-- Example rotating plane -->
+
+        <!-- Rotating Plane -->
         <a-plane 
             color="orange" 
             opacity="0.8" 
             position="0 0 0" 
             width="1" 
             height="0.5" 
-            rotation="0 0 0" 
+            rotation="0 0 0"
             animation="property: rotation; to: 0 360 0; loop: true; dur: 4000">
         </a-plane>
+
+        <!-- Bouncing Sphere -->
+        <a-sphere 
+            color="red"
+            position="0 0.25 0.5"
+            radius="0.2"
+            animation="property: position; to: 0 0.5 0.5; dir: alternate; loop: true; dur: 1000">
+        </a-sphere>
+
+        <!-- Scaling Box -->
+        <a-box
+            color="blue"
+            position="0.5 0 0"
+            scale="0.3 0.3 0.3"
+            animation="property: scale; to: 0.6 0.6 0.6; dir: alternate; loop: true; dur: 1500">
+        </a-box>
+
     </a-entity>
 
 </a-scene>
@@ -66,7 +81,6 @@
 const startButton = document.getElementById('startButton');
 const arScene = document.getElementById('ar-scene');
 
-// Detect mobile devices
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 async function startAR() {
@@ -74,8 +88,6 @@ async function startAR() {
     arScene.style.display = "block";
 
     const mindarScene = document.querySelector("a-scene").systems["mindar-image"];
-
-    // Ensure video plays inline on iOS
     mindarScene.video.setAttribute('playsinline', true);
 
     await mindarScene.start();
@@ -83,11 +95,9 @@ async function startAR() {
 }
 
 if (isMobile) {
-    // Show button on mobile (required for iOS camera)
     startButton.style.display = "block";
     startButton.addEventListener("click", startAR);
 } else {
-    // Auto start on desktop
     arScene.style.display = "block";
     window.addEventListener("load", startAR);
 }
