@@ -27,8 +27,8 @@
   </head>
 
   <body>
-    <!-- Start button -->
-    <button id="startButton">Start AR</button>
+    <!-- Start button only for mobile -->
+    <button id="startButton" style="display:none;">Start AR</button>
 
     <!-- AR Scene -->
     <a-scene 
@@ -36,8 +36,8 @@
       mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1;" 
       embedded 
       vr-mode-ui="enabled: false" 
-      device-orientation-permission-ui="enabled: false"
-      style="display:none;"> <!-- hide until start -->
+      device-orientation-permission-ui="enabled: true" <!-- Important for iOS -->
+      style="display:none;">
 
       <!-- Camera -->
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -59,14 +59,26 @@
       const startButton = document.getElementById("startButton");
       const arScene = document.getElementById("ar-scene");
 
-      startButton.addEventListener("click", async () => {
-        startButton.style.display = "none"; // hide button
-        arScene.style.display = "block"; // show AR scene
+      // Detect mobile devices
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-        // initialize MindAR
+      async function startAR() {
+        startButton.style.display = "none";
+        arScene.style.display = "block";
+
         const mindarScene = document.querySelector("a-scene").systems["mindar-image"];
         await mindarScene.start();
-      });
+      }
+
+      if (isMobile) {
+        // Show button for mobile (iOS Safari requires user interaction)
+        startButton.style.display = "block";
+        startButton.addEventListener("click", startAR);
+      } else {
+        // Auto start on desktop
+        arScene.style.display = "block";
+        window.addEventListener("load", startAR);
+      }
     </script>
   </body>
 </html>
