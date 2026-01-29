@@ -4,48 +4,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    <style>
-      #startButton { 
-        position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
-        z-index: 1000; padding: 15px 30px; background: #00ea1c; color: black; 
-        border: none; border-radius: 8px; font-weight: bold;
-      }
-    </style>
   </head>
 
-  <body>
-    <button id="startButton">ACTIVATE DESIGN SCANNER</button>
-
+  <body style="margin: 0; overflow: hidden;">
     <a-scene 
-      mindar-image="imageTargetSrc: ./targets.txt; autoStart: false; uiLoading: no;" 
-      color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" 
-      vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      mindar-image="imageTargetSrc: ./targets.txt; uiLoading: no;" 
+      vr-mode-ui="enabled: false" 
+      device-orientation-permission-ui="enabled: false">
       
       <a-assets>
-        <video id="leoVideo" src="./leoburns.gif" preload="auto" loop="true" response-type="arraybuffer" crossorigin="anonymous" webkit-playsinline playsinline muted></video>
+        <img id="benimaroo" src="./benimaroo.gif?v=2" crossorigin="anonymous">
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-video src="#leoVideo" position="0 0 0" height="1" width="1" transparent="true" shader="flat"></a-video>
+        <a-image src="#benimaroo" position="0 0 0" height="1" width="1"></a-image>
       </a-entity>
     </a-scene>
-
-    <script>
-      const startButton = document.querySelector("#startButton");
-      const video = document.querySelector("#leoVideo");
-      const sceneEl = document.querySelector("a-scene");
-      
-      startButton.addEventListener('click', () => {
-        // 1. Start the AR System
-        sceneEl.systems['mindar-image-system'].start();
-        
-        // 2. Force the GIF/Video to play (This is the critical step)
-        video.play();
-        
-        startButton.style.display = "none";
-      });
-    </script>
   </body>
 </html>
