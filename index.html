@@ -5,40 +5,48 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <style>
-      /* This button is mandatory for iPhone/Android to 'wake up' the GIF */
-      #startButton { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 999; padding: 15px 30px; background: #222; color: white; border: none; border-radius: 8px; font-weight: bold; }
+      #startButton { 
+        position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
+        z-index: 1000; padding: 15px 30px; background: #ff4757; color: white; 
+        border: none; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      }
     </style>
   </head>
 
   <body>
-    <button id="startButton">CLICK TO START AR</button>
+    <button id="startButton">TAP TO SCAN DESIGN BOARD</button>
 
     <a-scene 
       mindar-image="imageTargetSrc: ./targets.txt; autoStart: false; uiLoading: no;" 
-      color-space="sRGB" 
-      renderer="colorManagement: true, physicallyCorrectLights" 
-      vr-mode-ui="enabled: false" 
-      device-orientation-permission-ui="enabled: false">
+      color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" 
+      vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       
       <a-assets>
-        <img id="benimaru" src="./leoburns.gif" crossorigin="anonymous">
+        <img id="leo" src="./leoburns.gif" crossorigin="anonymous">
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-image src="#leoburns" position="0 0 0" height="1" width="1" transparent="true"></a-image>
+        <a-plane 
+          src="#leo" 
+          position="0 0 0" 
+          height="1" 
+          width="1" 
+          transparent="true" 
+          material="shader: flat">
+        </a-plane>
       </a-entity>
     </a-scene>
 
     <script>
-      // This script waits for the click to launch the camera and textures
       const startButton = document.querySelector("#startButton");
       const sceneEl = document.querySelector("a-scene");
       
       startButton.addEventListener('click', () => {
-        sceneEl.systems['mindar-image-system'].start(); // Start the AR
-        startButton.style.display = "none"; // Hide button
+        // Starts the AR system and clears the browser's security block
+        sceneEl.systems['mindar-image-system'].start();
+        startButton.style.display = "none";
       });
     </script>
   </body>
