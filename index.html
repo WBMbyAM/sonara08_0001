@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <script src="https://rawgit.com/mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js"></script>
   </head>
 
   <body>
@@ -22,16 +23,12 @@
 
       <a-entity mindar-image-target="targetIndex: 0">
         
-        <a-plane 
-          src="#benimaru" 
+        <a-entity 
+          geometry="primitive: plane; width: 1; height: 1;" 
           position="0 0 0" 
-          height="1" 
-          width="1" 
-          rotation="0 0 0"
-          transparent="true"
-          shader="flat"
-          animation="property: scale; from: 0 0 0; to: 1 1 1; dur: 1000; easing: easeOutElastic">
-        </a-plane>
+          material="shader: gif; src: #benimaru; transparent: true; opacity: 1;"
+          animation="property: scale; from: 0 0 0; to: 1.2 1.2 1.2; dur: 1000; easing: easeOutBack">
+        </a-entity>
 
       </a-entity>
     </a-scene>
