@@ -7,14 +7,14 @@
     <style>
       #startButton { 
         position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
-        z-index: 1000; padding: 15px 30px; background: #ff4757; color: white; 
-        border: none; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        z-index: 1000; padding: 15px 30px; background: #00ea1c; color: black; 
+        border: none; border-radius: 8px; font-weight: bold;
       }
     </style>
   </head>
 
   <body>
-    <button id="startButton">TAP TO SCAN DESIGN BOARD</button>
+    <button id="startButton">ACTIVATE DESIGN SCANNER</button>
 
     <a-scene 
       mindar-image="imageTargetSrc: ./targets.txt; autoStart: false; uiLoading: no;" 
@@ -22,30 +22,28 @@
       vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       
       <a-assets>
-        <img id="leo" src="./leoburns.gif" crossorigin="anonymous">
+        <video id="leoVideo" src="./leoburns.gif" preload="auto" loop="true" response-type="arraybuffer" crossorigin="anonymous" webkit-playsinline playsinline muted></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-plane 
-          src="#leo" 
-          position="0 0 0" 
-          height="1" 
-          width="1" 
-          transparent="true" 
-          material="shader: flat">
-        </a-plane>
+        <a-video src="#leoVideo" position="0 0 0" height="1" width="1" transparent="true" shader="flat"></a-video>
       </a-entity>
     </a-scene>
 
     <script>
       const startButton = document.querySelector("#startButton");
+      const video = document.querySelector("#leoVideo");
       const sceneEl = document.querySelector("a-scene");
       
       startButton.addEventListener('click', () => {
-        // Starts the AR system and clears the browser's security block
+        // 1. Start the AR System
         sceneEl.systems['mindar-image-system'].start();
+        
+        // 2. Force the GIF/Video to play (This is the critical step)
+        video.play();
+        
         startButton.style.display = "none";
       });
     </script>
